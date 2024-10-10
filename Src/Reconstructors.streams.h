@@ -195,8 +195,20 @@ namespace PoissonRecon
 				{
 					if( !this->fp )
 					{
-						this->fp = std::tmpfile();
-						_closeFile = true;
+						size_t max_trails = 10;
+						do{
+							this->fp = std::tmpfile();
+							_closeFile = true;
+							if( !this->fp )
+							{
+								#pragma message( "[WARNING] Failed to open temporary file. Traying again ..." )
+								std::this_thread::sleep_for(std::chrono::milliseconds(500));
+							}else
+							{
+								break;
+							}
+							--max_trails;
+						}while(max_trails)
 						if( !this->fp ) ERROR_OUT( "Failed to open temporary file" );
 					}
 				}
