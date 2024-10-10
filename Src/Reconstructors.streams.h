@@ -208,7 +208,7 @@ namespace PoissonRecon
 								break;
 							}
 							--max_trails;
-						}while(max_trails)
+						}while(max_trails);
 						if( !this->fp ) ERROR_OUT( "Failed to open temporary file" );
 					}
 				}
