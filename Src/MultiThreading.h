@@ -121,7 +121,6 @@ namespace PoissonRecon
 
 			if( false ){}
 #ifdef _OPENMP
-#pragma message("OPENMP ON!")
 			else if( pType==ParallelType::OPEN_MP )
 			{
 				if( schedule==ScheduleType::STATIC )
@@ -131,6 +130,9 @@ namespace PoissonRecon
 #pragma omp parallel for num_threads( numThreads ) schedule( dynamic , 1 )
 					for( int c=0 ; c<chunks ; c++ ) _ChunkFunction( omp_get_thread_num() , c );
 			}
+
+#pragma message("OPENMP ON!")
+
 #endif // _OPENMP
 			else if( pType==ParallelType::ASYNC )
 			{
