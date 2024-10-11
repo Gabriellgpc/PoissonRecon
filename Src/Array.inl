@@ -414,14 +414,14 @@ template< class C >
 size_t fwrite( Array< C > source , size_t eSize , size_t count , FILE* fp )
 {
 	if( count*eSize>source.maximum()*sizeof( C ) ) PoissonRecon::ERROR_OUT( "Size of write exceeds source maximum: " , count*eSize , " > " , source.maximum()*sizeof( C ) );
-	if( count ) return fwrite( &source[0] , eSize , count , fp );
+	if( count ) return throwing_fwrite( &source[0] , eSize , count , fp );
 	else return 0;
 }
 template< class C >
 size_t fwrite( ConstArray< C > source , size_t eSize , size_t count , FILE* fp )
 {
 	if( count*eSize>source.maximum()*sizeof( C ) ) PoissonRecon::ERROR_OUT( "Size of write exceeds source maximum: " , count*eSize , " > " , source.maximum()*sizeof( C ) );
-	if( count ) return fwrite( &source[0] , eSize , count , fp );
+	if( count ) return throwing_fwrite( &source[0] , eSize , count , fp );
 	else return 0;
 }
 template< class C >

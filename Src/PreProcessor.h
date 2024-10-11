@@ -28,6 +28,7 @@ DAMAGE.
 
 #ifndef PRE_PROCESSOR_INCLUDED
 #define PRE_PROCESSOR_INCLUDED
+#define BIG_DATA
 
 #ifndef BIG_DATA								// Allow over-riding if defined before PreProcessor.h
 #undef BIG_DATA									// Supports processing requiring more than 32-bit integers for indexing
@@ -40,7 +41,7 @@ DAMAGE.
 //#define SANITIZED_PR								// If enabled, produces CLANG-sanitized code [thread/undefined/address]
 //#define FAST_COMPILE								// If enabled, only a single version of the code is compiled
 #undef SHOW_WARNINGS							// Display compilation warnings
-#undef ARRAY_DEBUG								// If enabled, array access is tested for validity
+// #undef ARRAY_DEBUG								// If enabled, array access is tested for validity
 
 #ifdef BIG_DATA
 #define USE_DEEP_TREE_NODES						// Chances are that if you are using big data, you want to support a tree with depth>15.

@@ -121,7 +121,7 @@ namespace PoissonRecon
 	{
 		// It is assumed that the file pointer was open for binary writing
 		FileBackedOutputDataStream( FILE *fp ) : _fp(fp) {}
-		size_t write( const Data &d ){ fwrite( &d , sizeof(Data) , 1 , _fp ) ; return _sz++; }
+		size_t write( const Data &d ){ throwing_fwrite( &d , sizeof(Data) , 1 , _fp ) ; return _sz++; }
 		size_t size( void ) const { return _sz; }
 
 	protected:
@@ -163,8 +163,8 @@ namespace PoissonRecon
 		size_t write( const std::vector< Data > &d )
 		{
 			unsigned int pSize = (unsigned int)d.size();
-			fwrite( &pSize , sizeof(unsigned int) , 1 , _fp );
-			fwrite( &d[0] , sizeof(Data) , pSize , _fp );
+			throwing_fwrite( &pSize , sizeof(unsigned int) , 1 , _fp );
+			throwing_fwrite( &d[0] , sizeof(Data) , pSize , _fp );
 			return _sz++;
 		}
 		size_t size( void ) const { return _sz; }
@@ -242,7 +242,7 @@ namespace PoissonRecon
 		size_t write( const Data &d )
 		{
 			_factory.toBuffer( d , _buffer );
-			fwrite( _buffer , sizeof(unsigned char) , _bufferSize , _fp );
+			throwing_fwrite( _buffer , sizeof(unsigned char) , _bufferSize , _fp );
 			return _sz++;
 		}
 		size_t size( void ) const { return _sz; }
@@ -263,9 +263,9 @@ namespace PoissonRecon
 		~FileBackedOutputIndexedFactoryTypeStream( void ){ DeletePointer( _buffer ); }
 		size_t write( const size_t &idx , const Data &d )
 		{
-			fwrite( &idx , sizeof(size_t) , 1 , _fp );
+			throwing_fwrite( &idx , sizeof(size_t) , 1 , _fp );
 			_factory.toBuffer( d , _buffer );
-			fwrite( _buffer , sizeof(unsigned char) , _bufferSize , _fp );
+			throwing_fwrite( _buffer , sizeof(unsigned char) , _bufferSize , _fp );
 			return _sz++;
 		}
 		size_t size( void ) const { return _sz; }

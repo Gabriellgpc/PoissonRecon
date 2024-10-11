@@ -40,7 +40,7 @@ inline void _Copy( FILE *target , FILE *source , size_t sz , size_t bufferSize=1
 	if( sz==-1 )
 	{
 		size_t ioBytes;
-		while( ( ioBytes=fread( buffer , sizeof(unsigned char) , bufferSize , source ) ) ) fwrite( buffer , sizeof(unsigned char) , ioBytes , target );
+		while( ( ioBytes=fread( buffer , sizeof(unsigned char) , bufferSize , source ) ) ) throwing_fwrite( buffer , sizeof(unsigned char) , ioBytes , target );
 	}
 	else
 	{
@@ -48,7 +48,7 @@ inline void _Copy( FILE *target , FILE *source , size_t sz , size_t bufferSize=1
 		{
 			size_t ioBytes = std::min< size_t >( bufferSize , sz );
 			if( ioBytes!=fread( buffer , sizeof(unsigned char) , ioBytes , source ) ) ERROR_OUT( "Failed to read from source: " , ioBytes );
-			if( ioBytes!=fwrite( buffer , sizeof(unsigned char) , ioBytes , target ) ) ERROR_OUT( "Failed to write to target: " , ioBytes );
+			if( ioBytes!=throwing_fwrite( buffer , sizeof(unsigned char) , ioBytes , target ) ) ERROR_OUT( "Failed to write to target: " , ioBytes );
 			sz -= ioBytes;
 		}
 	}
@@ -113,8 +113,8 @@ void _OffsetPolygons( const Factory &factory , std::string in , std::string out 
 
 		auto WritePolygon = [&]( FILE *fp , int n )
 		{
-			fwrite( &n , sizeof(int) , 1 , fp );
-			fwrite( faceIndices , sizeof(Index) , n , fp );
+			throwing_fwrite( &n , sizeof(int) , 1 , fp );
+			throwing_fwrite( faceIndices , sizeof(Index) , n , fp );
 		};
 
 		for( unsigned int j=0 ; j<std::get<2>( _elems[1] ).size() ; j++ ) inPly->get_property( std::get<0>( _elems[1] ) , &std::get<2>( _elems[1] )[j] );

@@ -194,7 +194,8 @@ namespace PoissonRecon
 			struct FileDescription
 			{
 				FILE *fp;
-
+				// char fileName[2048];
+				// FileDescription( FILE *fp ) : fp(fp) { fileName[0] = 0; }
 				FileDescription( FILE *fp ) : fp(fp) , _closeFile(false)
 				{
 					if( !this->fp )
@@ -205,7 +206,8 @@ namespace PoissonRecon
 						if( !this->fp ) ERROR_OUT( "Failed to open temporary file" );
 					}
 				}
-				~FileDescription( void ){ if( _closeFile ) fclose(fp); }
+				// ~FileDescription( void ){ if( _closeFile ) fclose(fp); }
+				~FileDescription( void ){ if( _closeFile ) throwing_fclose(fp); }
 			protected:
 #ifdef SHOW_WARNINGS
 #pragma message( "[WARNING] Probably can let the system handle closing the file" )
@@ -214,7 +216,7 @@ namespace PoissonRecon
 			};
 
 			FileBackedReadWriteStream( FILE *fp ) : _fd(fp) {}
-			bool write( ConstPointer(char) data , size_t size ){ return fwrite( data , sizeof(char) , size , _fd.fp )==size; }
+			bool write( ConstPointer(char) data , size_t size ){ return throwing_fwrite( data , sizeof(char) , size , _fd.fp )==size; }
 			bool read( Pointer(char) data , size_t size ){ return fread( data , sizeof(char) , size , _fd.fp )==size; }
 			void reset( void ){ fseek( _fd.fp , 0 , SEEK_SET ); }
 		protected:
