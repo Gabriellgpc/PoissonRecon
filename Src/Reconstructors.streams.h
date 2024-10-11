@@ -33,10 +33,6 @@ DAMAGE.
 #include "MyExceptions.h"
 #include "Array.h"
 
-#include <mutex>
-
-std::mutex tmpfileMutex;
-
 namespace PoissonRecon
 {
 	namespace Reconstructor
@@ -196,14 +192,14 @@ namespace PoissonRecon
 				FILE *fp;
 				// char fileName[2048];
 				// FileDescription( FILE *fp ) : fp(fp) { fileName[0] = 0; }
+				// #define SetTempDirectory( tempDir , sz ) if( std::getenv( "TMPDIR" ) ) strcpy( tempDir , std::getenv( "TMPDIR" ) );
 				FileDescription( FILE *fp ) : fp(fp) , _closeFile(false)
 				{
 					if( !this->fp )
 					{
-						std::lock_guard<std::mutex> lock(tmpfileMutex); // Ensure thread-safe access to tmpfile creation
 						this->fp = std::tmpfile();
 						_closeFile = true;
-						if( !this->fp ) ERROR_OUT( "Failed to open temporary file" );
+						if( this->fp == NULL ) ERROR_OUT( "Failed to open temporary file" );
 					}
 				}
 				// ~FileDescription( void ){ if( _closeFile ) fclose(fp); }
