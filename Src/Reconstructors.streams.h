@@ -33,6 +33,10 @@ DAMAGE.
 #include "MyExceptions.h"
 #include "Array.h"
 
+#include <mutex>
+
+std::mutex tmpfileMutex;
+
 namespace PoissonRecon
 {
 	namespace Reconstructor
@@ -195,20 +199,9 @@ namespace PoissonRecon
 				{
 					if( !this->fp )
 					{
-						size_t max_trails = 100;
-						do{
-							this->fp = std::tmpfile();
-							_closeFile = true;
-							if( !this->fp )
-							{
-								PR_WARN("[WARNING] Failed to open temporary file. Traying again ...");
-								std::this_thread::sleep_for(std::chrono::seconds(5));
-							}else
-							{
-								break;
-							}
-							--max_trails;
-						}while(max_trails > 0);
+						std::lock_guard<std::mutex> lock(tmpfileMutex); // Ensure thread-safe access to tmpfile creation
+						this->fp = std::tmpfile();
+						_closeFile = true;
 						if( !this->fp ) ERROR_OUT( "Failed to open temporary file" );
 					}
 				}
