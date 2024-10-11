@@ -198,7 +198,7 @@ namespace PoissonRecon
 					if( !this->fp )
 					{
 						// this->fp = std::tmpfile();
-						this->fp = create_tmpfile();
+						this->fp = create_temp_file();
 						_closeFile = true;
 						if( this->fp == NULL ) ERROR_OUT( "Failed to open temporary file" );
 					}
