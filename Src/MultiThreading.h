@@ -131,8 +131,6 @@ namespace PoissonRecon
 					for( int c=0 ; c<chunks ; c++ ) _ChunkFunction( omp_get_thread_num() , c );
 			}
 
-#pragma message("OPENMP ON!")
-
 #endif // _OPENMP
 			else if( pType==ParallelType::ASYNC )
 			{
