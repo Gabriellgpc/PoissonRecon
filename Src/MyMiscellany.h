@@ -253,7 +253,7 @@ namespace PoissonRecon
 
 	FILE* create_temp_file()
 	{
-		std::string tmpDir = "/tmp/";
+		std::string tmpDir = "./";
 		std::string fileName;
 
 		// Try generating a unique file name

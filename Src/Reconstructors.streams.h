@@ -189,7 +189,7 @@ namespace PoissonRecon
 		public:
 			struct FileDescription
 			{
-				FILE *fp;
+				FILE *fp{NULL};
 				// char fileName[2048];
 				// FileDescription( FILE *fp ) : fp(fp) { fileName[0] = 0; }
 				// #define SetTempDirectory( tempDir , sz ) if( std::getenv( "TMPDIR" ) ) strcpy( tempDir , std::getenv( "TMPDIR" ) );
@@ -197,8 +197,8 @@ namespace PoissonRecon
 				{
 					if( !this->fp )
 					{
-						this->fp = std::tmpfile();
-						// this->fp = create_temp_file();
+						// this->fp = std::tmpfile();
+						this->fp = create_temp_file();
 						_closeFile = true;
 						if( this->fp == NULL ) ERROR_OUT( "Failed to open temporary file" );
 					}
