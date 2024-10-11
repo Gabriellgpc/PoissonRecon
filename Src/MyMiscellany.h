@@ -36,6 +36,12 @@ DAMAGE.
 #include <cstdio>
 #include <ctime>
 #include <chrono>
+
+#include <cerrno>
+#include <clocale>
+#include <cmath>
+#include <cstring>
+
 #if defined( _WIN32 ) || defined( _WIN64 )
 #include <io.h>
 #include <Windows.h>
