@@ -264,8 +264,10 @@ namespace PoissonRecon
 		while (attempts < maxAttempts)
 		{
 			fileName = tmpDir + "tmpfile_" + generate_uuid();
-			fp = fopen(fileName.c_str(), "w+");  // Try to create the file
-			if (fp) {
+			fp = fopen(fileName.c_str(), "wb+");  // Try to create the file
+			PR_WARN("Creating temporary file");
+			if (fp)
+			{
 				break;  // File successfully created, break the loop
 			}
 			attempts++;

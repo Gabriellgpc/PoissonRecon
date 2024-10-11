@@ -121,6 +121,7 @@ namespace PoissonRecon
 
 			if( false ){}
 #ifdef _OPENMP
+#pragma message("OPENMP ON!")
 			else if( pType==ParallelType::OPEN_MP )
 			{
 				if( schedule==ScheduleType::STATIC )
