@@ -225,6 +225,29 @@ namespace PoissonRecon
 	}
 
 
+	FILE *create_tmpfile()
+	{
+		// Create a template for the file name under /tmp directory
+		char filename[] = "/tmp/tmpPoissonReconfileXXXXXX"; // X's will be replaced by mkstemp
+
+		// Create and open a unique temporary file
+		int fd = mkstemp(filename);
+		if (fd == -1) {
+			throw std::runtime_error("Failed to create a unique temporary file");
+		}
+
+		// Unlink the file so it will be deleted automatically when closed
+		unlink(filename);
+
+		// Convert the file descriptor to a FILE* for standard I/O operations
+		FILE* fp = fdopen(fd, "wb+");
+		// if (!fp) {
+		// 	close(fd); // Close file descriptor if fdopen fails
+		// 	throw std::runtime_error("Failed to open temporary file as FILE*");
+		// }
+    	return fp;
+	}
+
 
 	//////////////////
 	// Memory Stuff //
