@@ -42,6 +42,13 @@ DAMAGE.
 #include <cmath>
 #include <cstring>
 
+
+#include <cstdlib>
+#include <string>
+#include <random>
+#include <stdexcept>
+#include <sys/stat.h>
+
 #if defined( _WIN32 ) || defined( _WIN64 )
 #include <io.h>
 #include <Windows.h>
@@ -225,27 +232,54 @@ namespace PoissonRecon
 	}
 
 
-	FILE *create_tmpfile()
+	// Helper function to generate a UUID-like random string
+	std::string generate_uuid()
 	{
-		// Create a template for the file name under /tmp directory
-		char filename[] = "/tmp/tmpPoissonReconfileXXXXXX"; // X's will be replaced by mkstemp
+		std::random_device rd;  // Seed for random number generator
+		std::uniform_int_distribution<int> dist(0, 15);  // Generate random hexadecimal values
+		std::uniform_int_distribution<int> dist2(8, 11); // For UUID version
 
-		// Create and open a unique temporary file
-		int fd = mkstemp(filename);
-		if (fd == -1) {
-			throw std::runtime_error("Failed to create a unique temporary file");
+		std::string uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+		for (char& c : uuid)
+		{
+			if (c == 'x') {
+				c = "0123456789abcdef"[dist(rd)];
+			} else if (c == 'y') {
+				c = "89ab"[dist2(rd)];  // To make sure it's a valid UUID (y should be 8, 9, a, or b)
+			}
+		}
+		return uuid;
+	}
+
+	FILE* create_temp_file()
+	{
+		std::string tmpDir = "/tmp/";
+		std::string fileName;
+
+		// Try generating a unique file name
+		FILE* fp = nullptr;
+		int attempts = 0;
+		const int maxAttempts = 100;  // Limit the number of attempts to avoid infinite loops
+
+		while (attempts < maxAttempts)
+		{
+			fileName = tmpDir + "tmpfile_" + generate_uuid();
+			fp = fopen(fileName.c_str(), "w+");  // Try to create the file
+			if (fp) {
+				break;  // File successfully created, break the loop
+			}
+			attempts++;
 		}
 
-		// Unlink the file so it will be deleted automatically when closed
-		unlink(filename);
-
-		// Convert the file descriptor to a FILE* for standard I/O operations
-		FILE* fp = fdopen(fd, "wb+");
-		// if (!fp) {
-		// 	close(fd); // Close file descriptor if fdopen fails
-		// 	throw std::runtime_error("Failed to open temporary file as FILE*");
+		// if (!fp)
+		// {
+			// throw std::runtime_error("Failed to create a unique temporary file after multiple attempts");
+		// }else
+		// {
+			// Unlink the file to ensure it gets deleted when closed
+		unlink(fileName.c_str());
 		// }
-    	return fp;
+		return fp;
 	}
 
 
